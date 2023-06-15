@@ -1,5 +1,7 @@
 import { track, trigger } from './effect';
-import { ReactiveFlag } from './reactive';
+import { ReactiveFlag, readonly } from './reactive';
+import { reactive } from './reactive';
+import { isObject } from '../shared';
 
 const get = createCetter();
 const set = creatSetter();
@@ -14,6 +16,11 @@ function createCetter(isReadonly = false) {
     }
 
     const res = Reflect.get(target, key);
+
+    // 判断 res 是不是一个object
+    if (isObject(res)) {
+      return isReadonly ? readonly(res) : reactive(res);
+    }
     // TODO 依赖收集
     if (!isReadonly) track(target, key);
     return res;
