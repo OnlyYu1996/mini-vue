@@ -1,14 +1,21 @@
 import { track, trigger } from './effect';
+import { ReactiveFlag } from './reactive';
 
 const get = createCetter();
 const set = creatSetter();
 const readonlyGet = createCetter(true);
 
-function createCetter(readonly = false) {
+function createCetter(isReadonly = false) {
   return function get(target, key) {
+    if (key === ReactiveFlag.IS_REACTIVE) {
+      return !isReadonly;
+    } else if (key === ReactiveFlag.IS_READONLY) {
+      return isReadonly;
+    }
+
     const res = Reflect.get(target, key);
     // TODO 依赖收集
-    if (!readonly) track(target, key);
+    if (!isReadonly) track(target, key);
     return res;
   };
 }
