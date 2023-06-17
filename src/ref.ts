@@ -11,6 +11,7 @@ class RefImpl {
   public dep;
   // 用于存储转换前的原始值（调用reactive后，会变成一个proxy值，set的时候无法对比）
   private _rawValue: any;
+  public __v_isRef = true;
   constructor(value) {
     this._rawValue = value;
 
@@ -47,4 +48,12 @@ function trackRefValue(ref) {
 
 export function ref(val) {
   return new RefImpl(val);
+}
+
+export function isRef(ref) {
+  return !!ref.__v_isRef;
+}
+
+export function unRef(ref) {
+  return isRef(ref) ? ref.value : ref;
 }

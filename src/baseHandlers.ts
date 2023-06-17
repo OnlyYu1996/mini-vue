@@ -16,6 +16,7 @@ function createCetter(isReadonly = false, shallow = false) {
       return isReadonly;
     }
 
+    // 通过Reflect(反射)获取属性
     const res = Reflect.get(target, key);
 
     if (shallow) {
