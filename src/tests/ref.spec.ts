@@ -1,5 +1,5 @@
 import { effect } from '../effect';
-import { ref, isRef, unRef } from '../ref';
+import { ref, isRef, unRef, proxyRefs } from '../ref';
 import { reactive } from '../reactive';
 
 describe('ref', () => {
@@ -52,5 +52,32 @@ describe('ref', () => {
     const a = ref(1);
     expect(unRef(a)).toBe(1);
     expect(unRef(1)).toBe(1);
+  });
+
+  it('proxyRefs', () => {
+    // 不再需要通过.value去获取内容
+    // 在setup() {} 返回的对象，在template中可以直接获取到值，
+    const user = {
+      age: ref(10),
+      name: '张三',
+    };
+
+    // get => age (ref) 那么就给他返回 .value
+    // 不是 ref 直接返回值
+    const proxyUser = proxyRefs(user);
+    expect(user.age.value).toBe(10);
+    expect(proxyUser.age).toBe(10);
+    expect(proxyUser.name).toBe('张三');
+
+    // set => ref  .value
+    // 不是一个ref类型
+
+    proxyUser.age = 20;
+    expect(proxyUser.age).toBe(20);
+    expect(user.age.value).toBe(20);
+
+    proxyUser.age = ref(10);
+    expect(proxyUser.age).toBe(10);
+    expect(user.age.value).toBe(10);
   });
 });
