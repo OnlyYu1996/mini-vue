@@ -1,6 +1,6 @@
 import { hasChanged, isObject } from './shared/index';
-import { isTracking, trackEffects, triggerEffects } from './effect';
-import { reactive } from './reactive';
+import { isTracking, trackEffects, triggerEffects } from './reactivety/effect';
+import { reactive } from './reactivety/reactive';
 
 // ref 针对一个值类型
 // 1 true '1' []

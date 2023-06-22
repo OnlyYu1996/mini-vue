@@ -1,5 +1,5 @@
 import { effect } from '../effect';
-import { ref, isRef, unRef, proxyRefs } from '../ref';
+import { ref, isRef, unRef, proxyRefs } from '../../ref';
 import { reactive } from '../reactive';
 
 describe('ref', () => {
