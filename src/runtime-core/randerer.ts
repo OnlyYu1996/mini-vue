@@ -1,5 +1,6 @@
 import { isObject } from './../shared/index';
 import { createComponentInstance, setupComponent } from './component';
+import { ShapeFlags } from '../shared/ShapeFlags';
 
 export function render(vnode, continer) {
   // patch
@@ -24,11 +25,11 @@ function processElement(vnode, container) {
 
 function mountElement(vnode, container) {
   const el = (vnode.el = document.createElement(vnode.type));
-  const { children, props } = vnode;
+  const { children, props, shapeFlag } = vnode;
 
-  if (typeof children === 'string') {
+  if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children;
-  } else if (Array.isArray(children)) {
+  } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
     mountChildren(vnode, el);
   }
 
