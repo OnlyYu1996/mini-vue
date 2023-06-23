@@ -12,6 +12,8 @@ function patch(vnode, container) {
   // 判断 是不是 element
   // if()
 
+  processElement()
+
   processComponent(vnode, container);
 }
 
