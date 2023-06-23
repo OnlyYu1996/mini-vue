@@ -1,3 +1,4 @@
+import { isObject } from './../shared/index';
 import { createComponentInstance, setupComponent } from './component';
 
 export function render(vnode, continer) {
@@ -10,11 +11,38 @@ function patch(vnode, container) {
   // 处理组件
 
   // 判断 是不是 element
-  // if()
+  if (typeof vnode.type === 'string') {
+    processElement(vnode, container);
+  } else if (isObject(vnode.type)) {
+    processComponent(vnode, container);
+  }
+}
 
-  processElement()
+function processElement(vnode, container) {
+  mountElement(vnode, container);
+}
 
-  processComponent(vnode, container);
+function mountElement(vnode, container) {
+  const el = document.createElement(vnode.type);
+  const { children, props } = vnode;
+
+  if (typeof children === 'string') {
+    el.textContent = children;
+  } else if (Array.isArray(children)) {
+    mountChildren(vnode, el);
+  }
+
+  for (const key in props) {
+    const val = props[key];
+    el.setAttribute(key, val);
+  }
+  container.append(el);
+}
+
+function mountChildren(vnode, container) {
+  vnode.children.forEach((v) => {
+    patch(v, container);
+  });
 }
 
 function processComponent(vnode, container) {
